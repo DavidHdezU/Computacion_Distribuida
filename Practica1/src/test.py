@@ -23,7 +23,7 @@ class Test_Practica1:
         """Prueba el algoritmo 'Conocer a los vecinos de mis vecinos'."""
         env, canal = self.get_ambiente_y_canal()
 
-        env.process(self.g.conoce_vecinos(env, canal))
+        self.g.conoce_vecinos(env, canal)
 
         env.run(until=TIEMPO_DE_EJECUCION)
 
@@ -74,6 +74,6 @@ class Test_Practica1:
 
 
 pruebas = Test_Practica1()
-#pruebas.uno() 
+pruebas.uno() 
 pruebas.dos()
 #pruebas.tres()

@@ -48,10 +48,18 @@ class NodoVecinos(Nodo):
     def __init__(self, id_nodo: int, vecinos: list, canales: tuple):
         """Constructor para el nodo 'vecinos'."""
         super().__init__(id_nodo, vecinos, canales)
+        self.vecinos_de_vecinos = []
 
     def conoce_vecinos(self, env: simpy.Environment):
         """Algoritmo para conocer a los vecinos de mis vecinos."""
-        raise NotImplementedError('Conoce_vecinos de NodoVecinos no implementado')
+        self.canales[1].envia(self.vecinos, self.vecinos)
+
+        while True:
+            yield env.timeout(1)
+            vecinos_de_v = yield self.canales[0].get()
+            for v in vecinos_de_v:
+                if self.vecinos_de_vecinos.count(v) == 0:
+                    self.vecinos_de_vecinos.append(v)
 
 class NodoArbolGenerador(Nodo):
     """Nodo que implementa el algoritmo del ejercicio 2.

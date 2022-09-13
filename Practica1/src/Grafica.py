@@ -31,12 +31,19 @@ class Grafica:
 
     def conoce_vecinos(self, env: simpy.Environment, canal: simpy.Store) -> None:
         """Algoritmo para conocer a los vecinos de mis vecinos."""
-        raise NotImplementedError('Conoce_vecinos de Grafica no implementado')
+        self.nodos = []
+        for i, vecinos in enumerate(self.adyacencias):
+            canal_entrada = canal.crea_canal_de_entrada()
+            nodo = NodoVecinos(i, vecinos, (canal_entrada, canal))
+            self.nodos.append(nodo)
+        
+        for v in self.nodos:
+            env.process(v.conoce_vecinos(env))
 
     def genera_arbol_generador(self, env: simpy.Environment, canal: CanalGeneral) \
             -> None:
         """Algoritmo para generar el arbol generador."""
-                
+        self.nodos = []
         for i, vecinos in enumerate(self.adyacencias):
             canal_entrada = canal.crea_canal_de_entrada()
             nodo = NodoArbolGenerador(i, vecinos, (canal_entrada, canal))
