@@ -1,5 +1,9 @@
+from lib2to3.pgen2.token import BACKQUOTE
 import Canales
 import simpy
+
+BACK_MSG = "BACK"
+GO_MSG = "MSGS"
 
 class Nodo:
     """Representa un nodo basico.
@@ -61,13 +65,53 @@ class NodoArbolGenerador(Nodo):
     """
     def __init__(self):
         """Constructor para el nodo arbol generador."""
+        
         super().__init__
 
-    def genera_arbol(self, env: simpy.Store):
+    def genera_arbol(self, env: simpy.Environment):
         """Algoritmo para producir el arbol generador."""
+        
         if self.id_node == 0:
-            self.madre = self.id_node
-            self.hijas = len(self.vecinos) # Supondremos que hijas se refiere a expected_msg
+            self.padre = self.id_node
+            self.msg_expected = len(self.vecinos) 
+            
+            mensaje = (GO_MSG, self.id_node, None) # Tipo de mensaje, mensajero, val_set
+            
+            yield env.timeout(1)
+            
+            self.canales[1].envia(mensaje, self.vecinos) # Para este caso el canal de salida no es de tipo simpy.Store, creemos que esto esto es confuso
+        else:
+            self.padre = None
+        
+        self.hijos = set()
+        
+        while True:
+            msg, mensajero, val_set = self.canales[0].get()
+            
+            if not self.padre:
+                self.padre = mensajero
+                self.msg_expected = len(self.vecinos)-1
+                
+                if self.msg_expected == 0:
+                    mensaje = (BACK_MSG, self.id_node, self.id_node)
+
+                    self.canales[1].envia(mensaje, [mensajero])
+            
+                else:
+                    mensaje = (BACK_MSG, self.id_node, self.id_node)
+                    destinatarios = [v for v in self.vecinos if v != self.padre]
+                    
+                    self.canales[1].envia(mensaje, destinatarios)
+                    
+            else:
+                mensaje = (BACK_MSG, self.id_node, self.id_node)
+                
+                
+
+                
+                
+                
+        
             
 
 class NodoBroadcast(Nodo):
