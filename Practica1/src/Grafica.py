@@ -13,29 +13,40 @@ class Grafica:
               corrido, el tipo de nodo sera distinto.
     """
     def __init__(self, nombre: str, adyacencias: list):
-        raise NotImplementedError('Constructor de Grafica no implementado')
+        self.nombre = nombre
+        self.adyacencias = adyacencias
+        self.nodos = []
 
     def __str__(self):
-        raise NotImplementedError('Str de Grafica no implementado')
+        return f"Gráfica: {self.nombre} \n Nodos: {self.nodos}"
 
     def get_nombre(self) -> str:
-        raise NotImplementedError('Get_nombre de Grafica no implementado')
+        return self.nombre
 
     def get_adyacencias(self) -> list:
-        raise NotImplementedError('Get_adyacencias de Grafica no implementado')
+        return self.adyacencias
 
     def get_nodos(self) -> list:
-        raise NotImplementedError('Get_nodos de Grafica no implementado')
+        return self.nodos
 
     def conoce_vecinos(self, env: simpy.Environment, canal: simpy.Store) -> None:
         """Algoritmo para conocer a los vecinos de mis vecinos."""
         raise NotImplementedError('Conoce_vecinos de Grafica no implementado')
 
-    def genera_arbol_generador(self, env: simpy.Environment, canal: simpy.Store) \
+    def genera_arbol_generador(self, env: simpy.Environment, canal: CanalGeneral) \
             -> None:
         """Algoritmo para generar el arbol generador."""
-        raise NotImplementedError('Get_arbol_generador de Grafica no implementado')
-
+                
+        for i, vecinos in enumerate(self.adyacencias):
+            canal_entrada = canal.crea_canal_de_entrada()
+            nodo = NodoArbolGenerador(i, vecinos, (canal_entrada, canal))
+            
+            self.nodos.append(nodo)
+            
+        for v in self.nodos:
+            env.process(v.genera_arbol(env))
+            
+            
     def broadcast(self, env: simpy.Environment, canal: simpy.Store,
             adyacencias_arbol: list()) -> None:
         """Algoritmo de broadcast.

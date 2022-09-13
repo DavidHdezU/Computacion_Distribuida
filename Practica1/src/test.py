@@ -16,7 +16,7 @@ class Test_Practica1:
     def get_ambiente_y_canal(self) -> tuple:
         """Funcion auxiliar para preparar las pruebas."""
         env = simpy.Environment()
-        canal = CanalGeneral(env)
+        canal = CanalGeneral(env, 10)
         return (env, canal)
 
     def uno(self):
@@ -41,7 +41,7 @@ class Test_Practica1:
         """Prueba el algoritmo 'Creacion de arbol generador'."""
         env, canal = self.get_ambiente_y_canal()
 
-        env.process(self.g.genera_arbol_generador(env, canal))
+        self.g.genera_arbol_generador(env, canal)
 
         env.run(until=TIEMPO_DE_EJECUCION)
 
@@ -49,6 +49,7 @@ class Test_Practica1:
         padres = [0, 0, 0, 1, 3, 2]
         hijos = [[1, 2], [3], [5], [4], [], []]
         nodos_res = self.g.get_nodos()
+        
         for i in range(0, len(nodos_res)):
             nodo = nodos_res[i]
             assert nodo.padre == padres[i],\
@@ -74,5 +75,5 @@ class Test_Practica1:
 
 pruebas = Test_Practica1()
 #pruebas.uno() 
-#pruebas.dos()
+pruebas.dos()
 #pruebas.tres()
