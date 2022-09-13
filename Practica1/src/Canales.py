@@ -26,7 +26,7 @@ class Canal():
 
     def get_canales(self) -> list:
         """Regresa la lista con los canales."""
-        raise NotImplementedError('Get_canales de Canal no implementado')
+        return self.canales
 
 
 class CanalGeneral(Canal):
@@ -34,4 +34,12 @@ class CanalGeneral(Canal):
 
     def envia(self, mensaje, vecinos):
         """Envia un mensaje a los canales de entrada de los vecinos."""
-        raise NotImplementedError('Envia de CanalGeneral no implementado')
+        eventos = []
+        
+        for i in range(len(self.canales)):
+            if i in vecinos:
+                eventos.append(self.canales[i].put(mensaje))
+                
+        return self.env.all_of(events=eventos)
+        
+        

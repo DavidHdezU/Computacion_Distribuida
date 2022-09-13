@@ -65,7 +65,10 @@ class NodoArbolGenerador(Nodo):
 
     def genera_arbol(self, env: simpy.Store):
         """Algoritmo para producir el arbol generador."""
-        raise NotImplementedError('GeneraArbol de NodoArbolGenerador no implementado')
+        if self.id_node == 0:
+            self.madre = self.id_node
+            self.hijas = len(self.vecinos) # Supondremos que hijas se refiere a expected_msg
+            
 
 class NodoBroadcast(Nodo):
     """Nodo que implementa el algoritmo del ejercicio 3.
