@@ -21,12 +21,30 @@ class Grafica:
         return f"Gráfica: {self.nombre} \n Nodos: {self.nodos}"
 
     def get_nombre(self) -> str:
+        """
+        Regresa el nombre de la gráfica
+
+        Returns:
+            str: nombre de la gráfica
+        """
         return self.nombre
 
     def get_adyacencias(self) -> list:
+        """
+        Regresa la lista de adyacencias
+
+        Returns:
+            list: lista de adyancencias
+        """
         return self.adyacencias
 
     def get_nodos(self) -> list:
+        """
+        Regresa la lista de nodos de la gráfica
+
+        Returns:
+            list: lista de nodos de la gráfica
+        """
         return self.nodos
 
     def conoce_vecinos(self, env: simpy.Environment, canal: simpy.Store) -> None:
