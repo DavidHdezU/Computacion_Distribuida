@@ -72,8 +72,26 @@ class Test_Practica1:
             assert mensaje_enviado == nodo.mensaje,\
             ('El nodo %d no tiene el mensaje correcto' % nodo.id_nodo)
 
+    def cuatro(self):
+        """Prueba el algoritmo 'Convergecast'.
+        
+        En este caso lo que realiza el convergecast es la suma de todos los 
+        valores de los nodos, y dicho valor está dado por su id.
+        """
+        env, canal = self.get_ambiente_y_canal()
+
+        env.process(self.g.convergecast(env, canal, self.adyacencias_arbol))
+
+        env.run(until=TIEMPO_DE_EJECUCION)
+
+        nodos_res = self.g.nodos
+        mensaje_esperado = 15 ## Suma de todos los valores (id) de los nodos
+        mensaje_recibido = nodos_res[0].value
+        assert mensaje_recibido == mensaje_esperado,\
+            ('El nodo distinguido no tiene el mensaje correcto')
 
 pruebas = Test_Practica1()
 pruebas.uno() 
 pruebas.dos()
 pruebas.tres()
+pruebas.cuatro()

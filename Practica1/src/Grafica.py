@@ -98,3 +98,25 @@ class Grafica:
             env.process(v.broadcast(env))
             
         yield env.timeout(0)
+
+    def convergecast(self, env: simpy.Environment, canal: simpy.Store,
+            adyacencias_arbol: list()) -> None:
+        """Algoritmo de convergecast.
+        
+        Atributos:
+        adyacencias_arbol -- Las aristas que forman el arbol sobre el que 
+                              vamos a hacer el convergecast.
+        """
+        self.adyacencias = adyacencias_arbol
+        
+        self.nodos = []
+        for i, vecinos in enumerate(self.adyacencias):
+            canal_entrada = canal.crea_canal_de_entrada()
+            nodo = NodoConvergecast(i, vecinos, (canal_entrada, canal))
+            
+            self.nodos.append(nodo)
+            
+        for v in self.nodos:
+            env.process(v.convergecast(env))
+            
+        yield env.timeout(0)

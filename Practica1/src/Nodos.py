@@ -155,3 +155,48 @@ class NodoBroadcast(Nodo):
             self.mensaje = yield self.canales[0].get()
             
             self.canales[1].envia(self.mensaje, self.vecinos)
+
+class NodoConvergecast(Nodo):
+    """Nodo que implementa el algoritmo convergecast.
+
+    Atributos adicionales:
+    value -- valor que el nodo quiere hacer llegar al nodo distinguido
+    """
+    def __init__(self, id_nodo: int, vecinos: list, canales: tuple):
+        """Constructor para el nodo broadcast."""
+        
+        super().__init__(id_nodo, vecinos, canales)
+        self.value = self.id_nodo
+        self.padre = None
+
+    def convergecast(self, env: simpy.Environment):
+        """Algoritmo de convergecast."""
+        
+        if self.id_nodo == 0: 
+            self.padre = self.id_nodo
+            
+            yield env.timeout(1)
+            self.canales[1].envia(("MSG_PADRE", self.id_nodo), self.vecinos)
+            
+        while True:
+            mensaje = yield self.canales[0].get()
+
+            if(mensaje[0] == "MSG_PADRE"): ## Mensaje que ayuda a que los nodos hijos conozcan a su padre
+                self.padre = mensaje[1]
+                
+
+                if self.vecinos: ## Si el nodo no es hoja se manda a sus hijos su identidad para que conozcan a su padre
+                    nuevo_mensaje = ("MSG_PADRE", self.id_nodo)
+                    self.canales[1].envia(nuevo_mensaje, self.vecinos)
+
+                else: ## Nodo hoja comienza a mandar el valor para el convergecast a su padre
+                    nuevo_mensaje = ("MSG_VALUE", self.value)
+                    self.canales[1].envia(nuevo_mensaje, [self.padre])
+            
+            else: ## Mensaje convergecast
+                if self.padre != self.id_nodo: # Si no es la raiz manda valor para el convergecast al padre
+                    self.value = mensaje[1] + self.value
+                    nuevo_mensaje = ("MSG_VALUE", self.value)
+                    self.canales[1].envia(nuevo_mensaje, [self.padre])
+                else: # Si es la raiz actualiza su valor con la informacion recibida y termina entonces el convergecast
+                    self.value = mensaje[1] + self.value
