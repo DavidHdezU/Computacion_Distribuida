@@ -135,7 +135,7 @@ class NodoBroadcast(Nodo):
     """
     def __init__(self):
         """Constructor para el nodo broadcast."""
-        raise NotImplementedError('Constructor de NodoBroadcast no implementado')
+        super().__init__(id_nodo, vecinos, canales)
 
     def broadcast(self, env: simpy.Store):
         """Algoritmo de broadcast."""

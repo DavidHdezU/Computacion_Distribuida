@@ -1,3 +1,4 @@
+import random
 from Canales import *
 from Nodos import *
 import simpy
@@ -84,4 +85,15 @@ class Grafica:
         adyacencias_arbol -- Las aristas que forman el arbol sobre el que 
                               vamos a hacer el broadcast del mensaje.
         """
-        raise NotImplementedError('Broadcast de Grafica no implementado')
+        self.nodos = []
+
+        for i, vecinos in enumerate(self.adyacencias):
+            canal_entrada = canal.crea_canal_de_entrada()
+            nodo = NodoBroadcast(i, vecinos, (canal_entrada, canal))
+            
+            self.nodos.append(nodo)
+            
+        nodo_distinguido = random.choice(self.nodos) # Seleccionamos un nodo distinguido al azar
+        env.process(nodo_distinguido.broadcast(env))
+
+        yield env.timeout(0)
