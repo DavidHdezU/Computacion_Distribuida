@@ -1,5 +1,7 @@
+from tkinter import Y
 import Canales
 import simpy
+
 
 BACK_MSG = "BACK"
 GO_MSG = "GO"
@@ -134,10 +136,24 @@ class NodoBroadcast(Nodo):
     Atributos adicionales:
     mensaje -- cadena con el mensaje que se distribuye
     """
-    def __init__(self):
+    def __init__(self, id_nodo: int, vecinos: list, canales: tuple):
         """Constructor para el nodo broadcast."""
-        raise NotImplementedError('Constructor de NodoBroadcast no implementado')
+        
+        super().__init__(id_nodo, vecinos, canales)
 
-    def broadcast(self, env: simpy.Store):
+    def broadcast(self, env: simpy.Environment):
         """Algoritmo de broadcast."""
-        raise NotImplementedError('Broadcast de NodoBroadcast no implementado')
+        
+        if self.id_nodo == 0:
+            self.mensaje = "Hello"
+            
+            yield env.timeout(1)
+            self.canales[1].envia(self.mensaje, self.vecinos)
+            
+        else:
+            self.mensaje = None
+            
+        while True:
+            self.mensaje = yield self.canales[0].get()
+            
+            self.canales[1].envia(self.mensaje, self.vecinos)

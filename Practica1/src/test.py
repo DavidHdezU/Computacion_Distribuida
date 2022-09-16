@@ -61,7 +61,7 @@ class Test_Practica1:
         """Prueba el algoritmo 'Creacion de arbol generador'."""
         env, canal = self.get_ambiente_y_canal()
 
-        env.process(self.g.broadcast(env, canal, self.adyacencias_arbol))
+        self.g.broadcast(env, canal, self.adyacencias_arbol)
 
         env.run(until=TIEMPO_DE_EJECUCION)
 
@@ -76,4 +76,4 @@ class Test_Practica1:
 pruebas = Test_Practica1()
 pruebas.uno() 
 pruebas.dos()
-#pruebas.tres()
+pruebas.tres()
