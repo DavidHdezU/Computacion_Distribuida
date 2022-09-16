@@ -1,4 +1,4 @@
-import enum
+import random
 from Canales import *
 from Nodos import *
 import simpy
@@ -58,6 +58,8 @@ class Grafica:
         
         for v in self.nodos:
             env.process(v.conoce_vecinos(env))
+        
+        yield env.timeout(0)
 
     def genera_arbol_generador(self, env: simpy.Environment, canal: CanalGeneral) \
             -> None:
@@ -71,6 +73,8 @@ class Grafica:
             
         for v in self.nodos:
             env.process(v.genera_arbol(env))
+
+        yield env.timeout(0)
             
             
     def broadcast(self, env: simpy.Environment, canal: simpy.Store,
