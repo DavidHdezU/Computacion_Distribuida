@@ -1,4 +1,3 @@
-from tkinter import Y
 import Canales
 import simpy
 

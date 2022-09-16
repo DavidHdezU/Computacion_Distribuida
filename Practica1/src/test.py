@@ -61,7 +61,7 @@ class Test_Practica1:
         """Prueba el algoritmo 'Broadcast'."""
         env, canal = self.get_ambiente_y_canal()
 
-        self.g.broadcast(env, canal, self.adyacencias_arbol)
+        env.process(self.g.broadcast(env, canal, self.adyacencias_arbol))
 
         env.run(until=TIEMPO_DE_EJECUCION)
 

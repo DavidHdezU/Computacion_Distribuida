@@ -96,3 +96,5 @@ class Grafica:
             
         for v in self.nodos:
             env.process(v.broadcast(env))
+            
+        yield env.timeout(0)
