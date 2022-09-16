@@ -34,6 +34,9 @@ class CanalGeneral(Canal):
 
     def envia(self, mensaje, vecinos):
         """Envia un mensaje a los canales de entrada de los vecinos."""
+        if not self.canales:
+            raise RuntimeError('No hay canales')
+        
         eventos = []
         
         for i in range(len(self.canales)):

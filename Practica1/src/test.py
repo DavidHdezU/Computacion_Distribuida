@@ -23,7 +23,7 @@ class Test_Practica1:
         """Prueba el algoritmo 'Conocer a los vecinos de mis vecinos'."""
         env, canal = self.get_ambiente_y_canal()
 
-        self.g.conoce_vecinos(env, canal)
+        env.process(self.g.conoce_vecinos(env, canal))
 
         env.run(until=TIEMPO_DE_EJECUCION)
 
@@ -41,7 +41,7 @@ class Test_Practica1:
         """Prueba el algoritmo 'Creacion de arbol generador'."""
         env, canal = self.get_ambiente_y_canal()
 
-        self.g.genera_arbol_generador(env, canal)
+        env.process(self.g.genera_arbol_generador(env, canal))
 
         env.run(until=TIEMPO_DE_EJECUCION)
 
@@ -58,7 +58,7 @@ class Test_Practica1:
                    ('El nodo %d no tiene a los hijos correctos' % nodo.id_nodo)
 
     def tres(self):
-        """Prueba el algoritmo 'Creacion de arbol generador'."""
+        """Prueba el algoritmo 'Broadcast'."""
         env, canal = self.get_ambiente_y_canal()
 
         env.process(self.g.broadcast(env, canal, self.adyacencias_arbol))

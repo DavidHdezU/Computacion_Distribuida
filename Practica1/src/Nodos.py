@@ -55,7 +55,6 @@ class NodoVecinos(Nodo):
         self.canales[1].envia(self.vecinos, self.vecinos)
 
         while True:
-            yield env.timeout(1)
             vecinos_de_v = yield self.canales[0].get()
             for v in vecinos_de_v:
                 if self.vecinos_de_vecinos.count(v) == 0:
