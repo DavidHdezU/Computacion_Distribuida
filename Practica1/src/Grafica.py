@@ -1,4 +1,3 @@
-import random
 from Canales import *
 from Nodos import *
 import simpy
