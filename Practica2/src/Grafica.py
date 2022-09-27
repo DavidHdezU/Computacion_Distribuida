@@ -13,20 +13,45 @@ class Grafica:
               corrido, el tipo de nodo sera distinto.
     """
     def __init__(self, nombre: str, adyacencias: list):
-        raise NotImplementedError('Constructor de Grafica no implementado')
+        self.nombre = nombre
+        self.adyacencias = adyacencias
+        self.nodos = []
 
     def __str__(self):
-        raise NotImplementedError('Str de Grafica no implementado')
+        return f"Gráfica: {self.nombre} \n Nodos: {self.nodos}"
 
     def get_nombre(self) -> str:
-        raise NotImplementedError('Get_nombre de Grafica no implementado')
+        """
+        Regresa el nombre de la gráfica
+
+        Returns:
+            str: nombre de la gráfica
+        """
+        return self.nombre
 
     def get_adyacencias(self) -> list:
-        raise NotImplementedError('Get_adyacencias de Grafica no implementado')
+        """
+        Regresa la lista de adyacencias
 
+        Returns:
+            list: lista de adyancencias
+        """
+        return self.adyacencias
+    
     def get_nodos(self) -> list:
-        raise NotImplementedError('Get_nodos de Grafica no implementado')
+        return self.nodos
 
     def bfs(self, env: simpy.Environment, canal: Canal) -> None:
         """Algoritmo de bfs."""
-        raise NotImplementedError('Bfs de Grafica no implementado')
+        self.nodos.clear()
+        
+        for i, vecinos in enumerate(self.adyacencias):
+            canal_entrada = canal.crea_canal_de_entrada()
+            nodo = NodoBFS(i, vecinos, (canal_entrada, canal))
+            
+            self.nodos.append(nodo)
+            
+        for v in self.nodos:
+            env.process(v.bfs(env))
+
+        yield env.timeout(0)

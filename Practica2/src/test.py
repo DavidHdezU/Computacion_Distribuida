@@ -30,6 +30,10 @@ class Test_Practica2:
         padres_esperados = [0, 0, 3, 0, 0, 1, 0, 1]
         niveles_esperados = [0, 1, 2, 1, 1, 2, 1, 2]
         nodos_res = self.g.get_nodos()
+        
+        hijos_nodos_lista = [(v.id_nodo, v.nivel ,v.hijos) for v in nodos_res]
+        for v, nivel, hijos in hijos_nodos_lista:
+            print(f"{v}({nivel}): {hijos}")
         # Para cada nodo verificamos que su lista de identifiers sea la esperada.
         for i in range(0, len(nodos_res)):
             nodo = nodos_res[i]
@@ -41,4 +45,4 @@ class Test_Practica2:
                     Nivel actual: {nodo.nivel}\nNivel esperado: {niveles_esperados[i]}')
 
 pruebas = Test_Practica2()
-#pruebas.uno() 
+pruebas.uno() 

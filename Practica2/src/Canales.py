@@ -34,4 +34,13 @@ class CanalGeneral(Canal):
 
     def envia(self, mensaje, vecinos):
         """Envia un mensaje a los canales de entrada de los vecinos."""
-        raise NotImplementedError('Envia de CanalGeneral no implementado')
+        if not self.canales:
+            raise RuntimeError('No hay canales')
+        
+        eventos = []
+        
+        for i in range(len(self.canales)):
+            if i in vecinos:
+                eventos.append(self.canales[i].put(mensaje))
+                
+        return self.env.all_of(events=eventos)
