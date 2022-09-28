@@ -1,6 +1,7 @@
 import Canales
 import math
 import simpy
+import collections
 
 BACK_YES_MSG = "BACK_YES"
 BACK_NO_MSG = "BACK_NO"
@@ -104,10 +105,79 @@ class NodoBFS(Nodo):
                             self.canales[1].envia(mensaje, [self.padre])
                     
                     
-                        
-                        
-                        
-                        
+class NodoDFS(Nodo):
+    """Nodo que implementa el algoritmo del ejercicio 2.
+    Basado en el algoritmo de la pagina 25 del libro Distributed 
+    Algorithms for Message-Passing Systems de Michel Raynal
+
+    Atributos adicionales:
+    padre -- id del nodo que sera su padre en el arbol
+    nivel -- entero que representa la distancia del nodo a la raiz
+    hijos -- lista de ids de los nodos hijos del nodo
+    visitados -- lista de ids de los nodos visitados
+    """
+    def __init__(self, id_nodo: int, vecinos: list, canales: tuple):
+        """Constructor para el nodo 'dfs'."""
+        super().__init__(id_nodo, vecinos, canales)
+        self.nivel = math.inf
+        self.padre = None
+        self.hijos = []
+        self.visitados = []
+
+    def dfs(self, env: simpy.Environment):
+        """Algoritmo de DFS."""
+        if self.id_nodo == 0:
+            self.padre = self.id_nodo
+            self.nivel = 0
+
+            mensaje = (GO_MSG, self.nivel, self.id_nodo)
+            yield env.timeout(1)
+            
+            self.canales[1].envia(mensaje, [self.vecinos[0]])
+            
+        while True:
+            msg, d, mensajero = yield self.canales[0].get()
+            if msg == GO_MSG:
+                if self.padre == None:
+                    self.padre = mensajero 
+                    self.nivel = d+1
+                    self.hijos = []
+                    self.visitados = [mensajero]
+                    if collections.Counter(self.visitados) == collections.Counter(self.vecinos):
+                        mensaje = (BACK_YES_MSG, self.nivel, self.id_nodo)
+                        self.canales[1].envia(mensaje, [mensajero])
+                    else:
+                        vecinos_no_visitados = []
+                        for k in self.vecinos:
+                            if k not in self.visitados:
+                                    vecinos_no_visitados.append(k)
+                                    break
+                        mensaje = (GO_MSG, self.nivel, self.id_nodo)
+                        self.canales[1].envia(mensaje, vecinos_no_visitados)
+                else:
+                    mensaje = (BACK_NO_MSG, self.nivel, self.id_nodo)
+                    self.canales[1].envia(mensaje, [mensajero])
+                    
+            else:
+                if msg == BACK_YES_MSG:
+                    self.hijos.append(mensajero)
+                
+                self.visitados.append(mensajero)
+                
+                if collections.Counter(self.visitados) == collections.Counter(self.vecinos):
+                    if self.padre == self.id_nodo:
+                        return 
+                    else:
+                        mensaje = (BACK_YES_MSG, self.nivel, self.id_nodo)
+                        self.canales[1].envia(mensaje, [self.padre])
+                else:
+                    vecinos_no_visitados = []
+                    for k in self.vecinos:
+                        if k not in self.visitados:
+                                vecinos_no_visitados.append(k)
+                                break
+                    mensaje = (GO_MSG, self.nivel, self.id_nodo)
+                    self.canales[1].envia(mensaje, vecinos_no_visitados)
 
             
                     

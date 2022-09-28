@@ -55,3 +55,18 @@ class Grafica:
             env.process(v.bfs(env))
 
         yield env.timeout(0)
+
+    def dfs(self, env: simpy.Environment, canal: Canal) -> None:
+        """Algoritmo de dfs."""
+        self.nodos.clear()
+        
+        for i, vecinos in enumerate(self.adyacencias):
+            canal_entrada = canal.crea_canal_de_entrada()
+            nodo = NodoDFS(i, vecinos, (canal_entrada, canal))
+            
+            self.nodos.append(nodo)
+            
+        for v in self.nodos:
+            env.process(v.dfs(env))
+
+        yield env.timeout(0)
