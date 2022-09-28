@@ -34,7 +34,7 @@ class Test_Practica2:
         
         hijos_nodos_lista = [(v.id_nodo, v.nivel ,v.hijos) for v in nodos_res]
         for v, nivel, hijos in hijos_nodos_lista:
-            print(f"{v}({nivel}): {hijos}")
+            print(f"Nodo: {v}, nivel: {nivel}, hijos: {hijos}")
         # Para cada nodo verificamos que su lista de identifiers sea la esperada.
         for i in range(0, len(nodos_res)):
             nodo = nodos_res[i]
@@ -63,7 +63,7 @@ class Test_Practica2:
         
         hijos_nodos_lista = [(v.id_nodo, v.nivel ,v.hijos) for v in nodos_res]
         for v, nivel, hijos in hijos_nodos_lista:
-            print(f"{v}({nivel}): {hijos}")
+            print(f"Nodo: {v}, nivel: {nivel}, hijos: {hijos}")
         # Para cada nodo verificamos que su lista de identifiers sea la esperada.
         for i in range(0, len(nodos_res)):
             nodo = nodos_res[i]

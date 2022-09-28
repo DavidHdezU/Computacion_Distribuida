@@ -39,6 +39,12 @@ class Grafica:
         return self.adyacencias
     
     def get_nodos(self) -> list:
+        """
+        Regresa la lista de nodos de la gráfica
+
+        Returns:
+            list: La lista de nodos
+        """
         return self.nodos
 
     def bfs(self, env: simpy.Environment, canal: Canal) -> None:
